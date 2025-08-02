@@ -1,103 +1,121 @@
-import Image from "next/image";
+/**
+ * アプリケーションのホームページ
+ * NextJSアプリケーションスケルトンの機能を紹介し、
+ * 実装されている機能のデモンストレーションを提供します
+ */
 
+import Image from "next/image";
+import ThemeToggle from "@/components/ThemeToggle";
+import UsersList from "@/components/UsersList";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
+
+/**
+ * ホームページコンポーネント
+ * 
+ * 構成:
+ * - ヘッダー: ロゴとテーマ切り替えボタン
+ * - 機能紹介セクション: 実装済み機能の概要カード
+ * - ユーザー一覧: APIとの連携デモ
+ * 
+ * @returns ホームページのJSX要素
+ */
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-background">
+      {/* ===== ヘッダー部分 ===== */}
+      <header className="border-b">
+        <div className="container mx-auto flex justify-between items-center py-4 px-6">
+          {/* ロゴ */}
+          <Image
+            className="dark:invert" // ダークモードで色反転
+            src="/next.svg"
+            alt="Next.js logo"
+            width={120}
+            height={25}
+            priority // LCP最適化のため優先読み込み
+          />
+          
+          {/* テーマ切り替えボタン */}
+          <ThemeToggle />
         </div>
+      </header>
+
+      {/* ===== メインコンテンツ ===== */}
+      <main className="container mx-auto py-8 px-6">
+        {/* アプリケーション紹介セクション */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-4">NextJS App Skeleton</h1>
+          <p className="text-muted-foreground text-lg">
+            A complete NextJS application skeleton with TypeScript, Tailwind CSS, Testing, and more.
+          </p>
+        </div>
+
+        {/* 機能紹介カードグリッド */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+          {/* 開発ツール */}
+          <Card>
+            <CardHeader>
+              <CardTitle>🛠️ Development Tools</CardTitle>
+              <CardDescription>
+                Prettier, ESLint, Husky, lint-staged configured
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          {/* テスト環境 */}
+          <Card>
+            <CardHeader>
+              <CardTitle>🧪 Testing Ready</CardTitle>
+              <CardDescription>
+                Jest, Testing Library with sample tests
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          {/* スタイリング */}
+          <Card>
+            <CardHeader>
+              <CardTitle>🎨 Styled Components</CardTitle>
+              <CardDescription>
+                Tailwind CSS with custom design system
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          {/* 状態管理 */}
+          <Card>
+            <CardHeader>
+              <CardTitle>🔄 State Management</CardTitle>
+              <CardDescription>
+                Zustand stores for app and user state
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          {/* API */}
+          <Card>
+            <CardHeader>
+              <CardTitle>🌐 API Routes</CardTitle>
+              <CardDescription>
+                Sample REST API endpoints with proper typing
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          {/* 環境設定 */}
+          <Card>
+            <CardHeader>
+              <CardTitle>⚙️ Environment Config</CardTitle>
+              <CardDescription>
+                Environment variables and configuration setup
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* ユーザー一覧デモ（API連携の実例） */}
+        <UsersList />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
