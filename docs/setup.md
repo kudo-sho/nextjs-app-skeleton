@@ -9,6 +9,7 @@ NextJS App Skeletonプロジェクトのセットアップ手順を詳しく説�
 - **Node.js** 18.x以上
 - **npm** 9.x以上（またはyarn, pnpm）
 - **Git** 2.x以上
+- **Docker** （Supabaseローカル開発用）
 
 ### Node.jsバージョン管理（推奨）
 
@@ -46,17 +47,18 @@ node --version
 
 プロジェクトディレクトリに入ると、`.tool-versions` ファイルにより自動的に正しいNode.jsバージョンが適用されます。
 
-## 初期セットアップ
+## クイックスタート（推奨）
 
 ### 1. プロジェクトのクローンまたは作成
 
 ```bash
-# 新規プロジェクトの場合
-npx create-next-app@latest nextjs-app-skeleton --typescript --tailwind --eslint --app
-
 # 既存プロジェクトをクローンする場合
 git clone <repository-url>
 cd nextjs-app-skeleton
+
+# テンプレートとして使用する場合
+npx degit <repository-url> my-new-project
+cd my-new-project
 ```
 
 ### 2. 依存関係のインストール
@@ -65,12 +67,71 @@ cd nextjs-app-skeleton
 npm install
 ```
 
-インストールされる主要な依存関係：
+### 3. Supabaseのセットアップ
+
+```bash
+# Supabase CLIのインストール（未インストールの場合）
+npm install -g @supabase/supabase-js supabase
+
+# Supabaseローカル環境の起動
+npx supabase start
+
+# データベースの初期化（マイグレーション + シード実行）
+npx supabase db reset
+```
+
+### 4. 開発サーバーの起動
+
+```bash
+npm run dev
+```
+
+ブラウザで `http://localhost:3000` にアクセス！
+
+**🎉 これだけで開発環境の準備が完了です！**
+
+---
+
+## 詳細セットアップ
+
+## 含まれる機能
+
+このスケルトンには以下の機能が設定済みです：
+
+**✅ フロントエンド：**
+
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS
+- 響応式UI コンポーネント
+- ダークモード対応
+
+**✅ バックエンド：**
+
+- Supabase (PostgreSQL + Auth + Realtime)
+- API Routes
+- 型安全なデータアクセス
+
+**✅ 開発体験：**
+
+- ESLint + Prettier
+- Husky + lint-staged
+- Jest + Testing Library
+- Hot reload開発環境
+
+**✅ デプロイ：**
+
+- Vercel対応設定
+- 環境変数管理
+- 本番ビルド最適化
+
+### インストールされる主要な依存関係
 
 **本番依存関係：**
 
 - `next` - Next.jsフレームワーク
 - `react` & `react-dom` - Reactライブラリ
+- `@supabase/supabase-js` - Supabaseクライアント
 - `zustand` - 状態管理
 - `clsx` & `tailwind-merge` - CSSクラス管理
 
@@ -82,29 +143,30 @@ npm install
 - `husky` & `lint-staged` - Gitフック
 - `jest` & `@testing-library/react` - テスト
 
-### 3. 環境変数の設定
+## Supabaseローカル開発環境
+
+このプロジェクトはSupabaseローカル環境を使用するため、本番のSupabaseプロジェクトなしでも開発を開始できます。
+
+### 環境変数について
+
+`.env.local`ファイルには既にローカル開発用の設定が含まれています：
 
 ```bash
-# .env.localファイルを作成（既に存在する場合はスキップ）
-cp .env.example .env.local
-```
+# Supabase Local Development (事前設定済み)
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-`.env.local`ファイルを編集して、必要な環境変数を設定：
-
-```bash
-# Supabase設定（必須）
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-
-# 認証設定
-NEXTAUTH_SECRET=your-production-secret-key
+# その他の設定
+DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres
+NEXTAUTH_SECRET=development-secret-key-change-in-production
 NEXTAUTH_URL=http://localhost:3000
-
-# 機能フラグ
+NODE_ENV=development
 ENABLE_ANALYTICS=false
 ENABLE_LOGGING=true
 ```
+
+**注意:** 本番環境では、必ず新しいSupabaseプロジェクトを作成し、適切なAPIキーに置き換えてください。
 
 #### Supabaseプロジェクトの作成
 

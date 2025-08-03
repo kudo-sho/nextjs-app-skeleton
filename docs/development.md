@@ -4,45 +4,42 @@ NextJS App Skeletonでの効率的な開発方法とベストプラクティス�
 
 ## ローカル開発環境のセットアップ
 
-### 1. データベース環境の選択肢
-
-#### オプション A: Supabase Local Development（推奨）
+### クイックスタート
 
 ```bash
-# Supabase CLIをインストール
-npm install -g supabase
+# 1. 依存関係のインストール
+npm install
 
-# Dockerがインストールされていることを確認
-docker --version
+# 2. Supabaseローカル環境の起動
+npx supabase start
 
-# Supabaseローカル環境を起動
-supabase init  # 初回のみ
-supabase start
+# 3. データベースの初期化（マイグレーション + シード）
+npx supabase db reset
 
-# 出力例:
-# API URL: http://localhost:54321
-# GraphQL URL: http://localhost:54321/graphql/v1
-# DB URL: postgresql://postgres:postgres@localhost:54322/postgres
-# Studio URL: http://localhost:54323
-# Inbucket URL: http://localhost:54324
-# JWT secret: super-secret-jwt-token-with-at-least-32-characters-long
-# anon key: eyJhbG...
-# service_role key: eyJhbG...
+# 4. 開発サーバーの起動
+npm run dev
 ```
 
-**環境変数の設定（.env.local）:**
+### データベース環境
+
+#### Supabase Local Development（デフォルト設定）
+
+環境変数は既に設定済み（`.env.local`）なので、追加の設定は不要です：
 
 ```bash
-# Supabaseローカル環境
-NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
+# Supabaseローカル環境（事前設定済み）
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-
-# その他必須項目
-NEXTAUTH_SECRET=development-secret-key-32-chars-minimum
-NEXTAUTH_URL=http://localhost:3000
-NODE_ENV=development
 ```
+
+**利用可能なサービス:**
+
+- **API URL**: http://127.0.0.1:54321
+- **GraphQL**: http://127.0.0.1:54321/graphql/v1
+- **DB URL**: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+- **Studio**: http://127.0.0.1:54323
+- **Mail**: http://127.0.0.1:54324
 
 #### オプション B: Docker Compose（PostgreSQL）
 

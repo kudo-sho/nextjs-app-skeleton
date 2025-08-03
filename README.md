@@ -27,9 +27,43 @@
 
 ## 🚀 クイックスタート
 
-### 1. プロジェクトをフォーク
+### 最速セットアップ（3分で完了）
 
-このリポジトリをフォークするか、テンプレートとして使用してください。
+```bash
+# 1. プロジェクトの取得
+git clone <repository-url>
+cd nextjs-app-skeleton
+
+# 2. 依存関係のインストール
+npm install
+
+# 3. Supabaseローカル環境の起動
+npx supabase start
+
+# 4. データベースの初期化（テーブル作成 + サンプルデータ）
+npx supabase db reset
+
+# 5. 開発サーバーの起動
+npm run dev
+```
+
+**🎉 完了！** [http://localhost:3000](http://localhost:3000) でアプリケーションが動作します。
+
+---
+
+## 🔧 詳細セットアップ
+
+### 1. プロジェクトの取得
+
+```bash
+# 既存プロジェクトをクローン
+git clone <repository-url>
+cd nextjs-app-skeleton
+
+# またはテンプレートとして使用
+npx degit <repository-url> my-new-project
+cd my-new-project
+```
 
 ### 2. Node.js環境のセットアップ
 
@@ -52,55 +86,33 @@ asdf install nodejs
 npm install
 ```
 
-### 4. データベース環境の選択
+### 4. Supabaseセットアップ
 
-#### A. Supabaseクラウド（本番推奨）
+**A. ローカル開発環境（推奨・簡単）**
 
-1. [Supabase](https://supabase.com)でプロジェクトを作成
-2. 環境変数を設定：
+Docker が必要です：
 
 ```bash
-cp .env.example .env.local
+# Supabaseローカル環境の起動
+npx supabase start
+
+# データベースの初期化（マイグレーション + シード実行）
+npx supabase db reset
 ```
 
-`.env.local` ファイルを編集：
+環境変数は既に設定済み（`.env.local`）なので、そのまま開発を開始できます。
+
+**B. Supabaseクラウド（本番用）**
+
+1. [Supabase](https://supabase.com)でプロジェクトを作成
+2. `.env.local`ファイルを編集：
 
 ```bash
-# Supabaseクラウド設定
+# Supabaseクラウド設定に変更
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
-
-#### B. ローカル開発環境（開発推奨）
-
-```bash
-# Supabase CLIをインストール
-npm install -g supabase
-
-# Dockerが必要
-docker --version
-
-# ローカル環境を起動
-supabase init
-supabase start
-```
-
-ローカル環境の場合の`.env.local`：
-
-```bash
-# Supabaseローカル設定
-NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-
-# 基本設定
-NEXTAUTH_SECRET=development-secret-key-32-chars-minimum
-NEXTAUTH_URL=http://localhost:3000
-NODE_ENV=development
-```
-
-> 💡 **推奨**: 開発時はローカル環境、本番はクラウドを使用
 
 ### 5. 開発サーバーの起動
 
@@ -110,13 +122,14 @@ npm run dev
 
 ブラウザで [http://localhost:3000](http://localhost:3000) を開いて確認してください。
 
-#### ローカルSupabase管理画面
+### 🔗 アクセス情報
 
-ローカル環境を選択した場合、以下のURLで管理画面にアクセスできます：
+開発環境で利用できるURL：
 
-- **Supabase Studio**: http://localhost:54323
-- **Database**: http://localhost:54322
-- **API Docs**: http://localhost:54321
+- **アプリケーション**: http://localhost:3000
+- **Supabase Studio**: http://localhost:54323 （データベース管理画面）
+- **Supabase API**: http://localhost:54321 （REST API）
+- **PostgreSQL**: localhost:54322 （直接DB接続）
 
 ## 📁 プロジェクト構成
 
