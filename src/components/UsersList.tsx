@@ -40,8 +40,8 @@ export default function UsersList() {
       // APIからユーザーデータを取得
       const response = await api.get<PaginatedResponse<User>>('/api/users');
 
-      if (response.success && response.data?.data) {
-        setUsers(response.data.data); // 成功時はデータを設定
+      if (response.success && response.data) {
+        setUsers(response.data as unknown as User[]); // 成功時はデータを設定
       } else {
         setError(response.error || 'Failed to fetch users'); // APIエラーを設定
       }
