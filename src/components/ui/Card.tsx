@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 /**
  * カードのメインコンテナ
  * 角丸、境界線、影などの基本的なカードスタイルを提供します
- * 
+ *
  * @example
  * <Card>
  *   <CardHeader>
@@ -24,9 +24,13 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        'rounded-lg border bg-card text-card-foreground shadow-sm', // カードの基本スタイル
+        'rounded-lg border shadow-sm', // カードの基本スタイル
         className
       )}
+      style={{
+        backgroundColor: 'hsl(var(--card))',
+        color: 'hsl(var(--card-foreground))',
+      }}
       {...props}
     />
   )
@@ -77,7 +81,8 @@ const CardDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-sm text-muted-foreground', className)} // 控えめなスタイルの説明文
+    className={cn('text-sm', className)} // 控えめなスタイルの説明文
+    style={{ color: 'hsl(var(--muted-foreground))' }}
     {...props}
   />
 ));
@@ -89,10 +94,10 @@ CardDescription.displayName = 'CardDescription';
  */
 const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div 
-      ref={ref} 
+    <div
+      ref={ref}
       className={cn('p-6 pt-0', className)} // ヘッダーとの間隔を考慮したパディング
-      {...props} 
+      {...props}
     />
   )
 );
@@ -114,4 +119,11 @@ const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 CardFooter.displayName = 'CardFooter';
 
 // 全てのカード関連コンポーネントをエクスポート
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+};

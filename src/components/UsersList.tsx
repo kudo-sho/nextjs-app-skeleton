@@ -13,13 +13,13 @@ import Button from './ui/Button';
 
 /**
  * ユーザー一覧表示コンポーネント
- * 
+ *
  * 機能:
  * - APIからユーザーデータを取得
  * - レスポンシブなグリッドレイアウトで表示
  * - ローディング状態とエラー状態の表示
  * - 手動リフレッシュ機能
- * 
+ *
  * @returns ユーザー一覧のJSX要素
  */
 export default function UsersList() {
@@ -36,12 +36,12 @@ export default function UsersList() {
     try {
       setLoading(true); // ローディング開始
       setError(null); // 前回のエラーをクリア
-      
+
       // APIからユーザーデータを取得
       const response = await api.get<PaginatedResponse<User>>('/api/users');
-      
-      if (response.success && response.data) {
-        setUsers(response.data); // 成功時はデータを設定
+
+      if (response.success && response.data?.data) {
+        setUsers(response.data.data); // 成功時はデータを設定
       } else {
         setError(response.error || 'Failed to fetch users'); // APIエラーを設定
       }
@@ -65,7 +65,10 @@ export default function UsersList() {
     return (
       <div className="flex justify-center items-center py-8">
         {/* スピナーアニメーション */}
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div
+          className="animate-spin rounded-full h-8 w-8 border-b-2"
+          style={{ borderColor: 'hsl(var(--primary))' }}
+        ></div>
       </div>
     );
   }
@@ -74,7 +77,9 @@ export default function UsersList() {
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-destructive mb-4">{error}</p>
+        <p className="mb-4" style={{ color: 'hsl(var(--destructive))' }}>
+          {error}
+        </p>
         <Button onClick={fetchUsers}>Try Again</Button>
       </div>
     );
@@ -90,13 +95,17 @@ export default function UsersList() {
           Refresh
         </Button>
       </div>
-      
+
       {/* ユーザーカードのグリッド表示 */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {users.map((user) => (
           <div
             key={user.id}
-            className="p-4 border rounded-lg bg-card text-card-foreground"
+            className="p-4 border rounded-lg"
+            style={{
+              backgroundColor: 'hsl(var(--card))',
+              color: 'hsl(var(--card-foreground))',
+            }}
           >
             <div className="flex items-center space-x-3">
               {/* ユーザーアバター画像（存在する場合のみ表示） */}
@@ -107,11 +116,16 @@ export default function UsersList() {
                   className="w-10 h-10 rounded-full"
                 />
               )}
-              
+
               {/* ユーザー情報 */}
               <div>
                 <h3 className="font-semibold">{user.name}</h3>
-                <p className="text-sm text-muted-foreground">{user.email}</p>
+                <p
+                  className="text-sm"
+                  style={{ color: 'hsl(var(--muted-foreground))' }}
+                >
+                  {user.email}
+                </p>
               </div>
             </div>
           </div>
