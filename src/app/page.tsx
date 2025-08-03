@@ -26,10 +26,7 @@ import {
  */
 export default function Home() {
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: 'hsl(var(--background))' }}
-    >
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* ===== ヘッダー部分 ===== */}
       <header className="border-b">
         <div className="container mx-auto flex justify-between items-center py-4 px-6">
@@ -53,10 +50,7 @@ export default function Home() {
         {/* アプリケーション紹介セクション */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">NextJS App Skeleton</h1>
-          <p
-            className="text-lg"
-            style={{ color: 'hsl(var(--muted-foreground))' }}
-          >
+          <p className="text-lg text-gray-600 dark:text-gray-400">
             A complete NextJS application skeleton with TypeScript, Tailwind
             CSS, Testing, and more.
           </p>

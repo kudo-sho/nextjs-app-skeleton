@@ -65,10 +65,7 @@ export default function UsersList() {
     return (
       <div className="flex justify-center items-center py-8">
         {/* スピナーアニメーション */}
-        <div
-          className="animate-spin rounded-full h-8 w-8 border-b-2"
-          style={{ borderColor: 'hsl(var(--primary))' }}
-        ></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -77,9 +74,7 @@ export default function UsersList() {
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="mb-4" style={{ color: 'hsl(var(--destructive))' }}>
-          {error}
-        </p>
+        <p className="mb-4 text-red-600 dark:text-red-400">{error}</p>
         <Button onClick={fetchUsers}>Try Again</Button>
       </div>
     );
@@ -101,11 +96,7 @@ export default function UsersList() {
         {users.map((user) => (
           <div
             key={user.id}
-            className="p-4 border rounded-lg"
-            style={{
-              backgroundColor: 'hsl(var(--card))',
-              color: 'hsl(var(--card-foreground))',
-            }}
+            className="p-4 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           >
             <div className="flex items-center space-x-3">
               {/* ユーザーアバター画像（存在する場合のみ表示） */}
@@ -120,10 +111,7 @@ export default function UsersList() {
               {/* ユーザー情報 */}
               <div>
                 <h3 className="font-semibold">{user.name}</h3>
-                <p
-                  className="text-sm"
-                  style={{ color: 'hsl(var(--muted-foreground))' }}
-                >
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   {user.email}
                 </p>
               </div>

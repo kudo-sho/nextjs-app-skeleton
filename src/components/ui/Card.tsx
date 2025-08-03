@@ -24,13 +24,9 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        'rounded-lg border shadow-sm', // カードの基本スタイル
+        'rounded-lg border shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100', // カードの基本スタイル
         className
       )}
-      style={{
-        backgroundColor: 'hsl(var(--card))',
-        color: 'hsl(var(--card-foreground))',
-      }}
       {...props}
     />
   )
@@ -81,8 +77,7 @@ const CardDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-sm', className)} // 控えめなスタイルの説明文
-    style={{ color: 'hsl(var(--muted-foreground))' }}
+    className={cn('text-sm text-gray-600 dark:text-gray-400', className)} // 控えめなスタイルの説明文
     {...props}
   />
 ));
