@@ -41,7 +41,7 @@ export const env = {
   NODE_ENV: getEnvVar('NODE_ENV', 'development'),
 
   // Vercel環境変数
-  VERCEL_URL: getEnvVar('VERCEL_URL', ''),
+  VERCEL_URL: getEnvVar('VERCEL_URL', 'http://localhost:3000'),
   VERCEL_ENV: getEnvVar('VERCEL_ENV', 'development'),
 
   // 機能フラグ（boolean値として解析）

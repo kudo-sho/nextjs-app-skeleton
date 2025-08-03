@@ -1,25 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { User, ApiResponse, PaginatedResponse } from '@/types';
-
-// Mock users data
-const mockUsers: User[] = [
-  {
-    id: '1',
-    email: 'john@example.com',
-    name: 'John Doe',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
-  },
-  {
-    id: '2',
-    email: 'jane@example.com',
-    name: 'Jane Smith',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
-    createdAt: new Date('2024-01-02'),
-    updatedAt: new Date('2024-01-02'),
-  },
-];
+import { createServerSupabaseClient } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,29 +9,53 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const search = searchParams.get('search') || '';
 
-    // Filter users based on search
-    let filteredUsers = mockUsers;
+    const supabase = createServerSupabaseClient();
+
+    // Build query
+    let query = supabase
+      .from('users')
+      .select('id, email, name, avatar, created_at, updated_at', {
+        count: 'exact',
+      });
+
+    // Add search filter if provided
     if (search) {
-      filteredUsers = mockUsers.filter(
-        (user) =>
-          user.name.toLowerCase().includes(search.toLowerCase()) ||
-          user.email.toLowerCase().includes(search.toLowerCase())
-      );
+      query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%`);
     }
 
-    // Pagination
+    // Add pagination
     const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+    query = query.range(startIndex, startIndex + limit - 1);
+
+    const { data: users, error, count } = await query;
+
+    if (error) {
+      console.error('Supabase error:', error);
+      const response: ApiResponse = {
+        success: false,
+        error: 'Failed to fetch users',
+      };
+      return NextResponse.json(response, { status: 500 });
+    }
+
+    // Transform the data to match our User type
+    const transformedUsers: User[] = (users || []).map((user) => ({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      avatar: user.avatar,
+      createdAt: new Date(user.created_at),
+      updatedAt: new Date(user.updated_at),
+    }));
 
     const response: PaginatedResponse<User> = {
       success: true,
-      data: paginatedUsers,
+      data: transformedUsers,
       pagination: {
         page,
         limit,
-        total: filteredUsers.length,
-        pages: Math.ceil(filteredUsers.length / limit),
+        total: count || 0,
+        pages: Math.ceil((count || 0) / limit),
       },
     };
 
@@ -68,7 +73,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email } = body;
+    const { name, email, avatar } = body;
 
     if (!name || !email) {
       const response: ApiResponse = {
@@ -78,20 +83,47 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 });
     }
 
-    const newUser: User = {
-      id: crypto.randomUUID(),
-      name,
-      email,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    const supabase = createServerSupabaseClient();
 
-    // In a real app, you would save to database
-    mockUsers.push(newUser);
+    const { data: newUser, error } = await supabase
+      .from('users')
+      .insert([
+        {
+          name,
+          email,
+          avatar,
+        },
+      ])
+      .select('id, email, name, avatar, created_at, updated_at')
+      .single();
+
+    if (error) {
+      console.error('Supabase error:', error);
+      const response: ApiResponse = {
+        success: false,
+        error:
+          error.code === '23505'
+            ? 'Email already exists'
+            : 'Failed to create user',
+      };
+      return NextResponse.json(response, {
+        status: error.code === '23505' ? 409 : 500,
+      });
+    }
+
+    // Transform the data to match our User type
+    const transformedUser: User = {
+      id: newUser.id,
+      email: newUser.email,
+      name: newUser.name,
+      avatar: newUser.avatar,
+      createdAt: new Date(newUser.created_at),
+      updatedAt: new Date(newUser.updated_at),
+    };
 
     const response: ApiResponse<User> = {
       success: true,
-      data: newUser,
+      data: transformedUser,
       message: 'User created successfully',
     };
 
