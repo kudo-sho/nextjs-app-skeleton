@@ -32,14 +32,14 @@ export const createServerSupabaseClient = () => {
         set(name: string, value: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value, ...options });
-          } catch (error) {
+          } catch {
             // SSR環境でのエラーハンドリング
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: '', ...options });
-          } catch (error) {
+          } catch {
             // SSR環境でのエラーハンドリング
           }
         },

@@ -56,8 +56,10 @@ cp .env.example .env.local
 `.env.local`ファイルを編集して、必要な環境変数を設定：
 
 ```bash
-# データベース接続（実際の値に変更）
-DATABASE_URL=postgresql://user:password@localhost:5432/your_database
+# Supabase設定（必須）
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 # 認証設定
 NEXTAUTH_SECRET=your-production-secret-key
@@ -67,6 +69,23 @@ NEXTAUTH_URL=http://localhost:3000
 ENABLE_ANALYTICS=false
 ENABLE_LOGGING=true
 ```
+
+#### Supabaseプロジェクトの作成
+
+1. [Supabase Console](https://supabase.com/dashboard) にアクセス
+2. "New Project" をクリック
+3. Organization、Project name、Database passwordを設定
+4. Regionを選択（日本の場合は "Asia Pacific (Tokyo)"）
+5. プロジェクトが作成されるまで待機（約2分）
+
+#### SupabaseのAPIキー取得
+
+1. 作成したプロジェクトの Dashboard を開く
+2. 左サイドバーの "Settings" → "API" をクリック
+3. 以下の値をコピーして `.env.local` に設定：
+   - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+   - **anon public** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - **service_role** → `SUPABASE_SERVICE_ROLE_KEY`
 
 ### 4. Gitフックの初期化
 
@@ -158,26 +177,53 @@ npm run start
 
 ## 追加設定
 
-### データベース設定
+### Supabase データベース設定
 
-実際のデータベースを使用する場合：
+#### 基本的なテーブル作成（例）
 
-1. **PostgreSQL**の場合：
+Supabase Dashboard の SQL Editor で以下のような基本テーブルを作成できます：
 
-```bash
-# データベースの作成
-createdb nextjs_app_skeleton
+```sql
+-- ユーザープロフィールテーブル
+CREATE TABLE profiles (
+  id UUID REFERENCES auth.users(id) PRIMARY KEY,
+  username TEXT UNIQUE,
+  full_name TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-# 環境変数の更新
-DATABASE_URL=postgresql://username:password@localhost:5432/nextjs_app_skeleton
+-- Row Level Security (RLS) を有効化
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+-- プロフィールのポリシー設定
+CREATE POLICY "Public profiles are viewable by everyone."
+  ON profiles FOR SELECT
+  USING (true);
+
+CREATE POLICY "Users can insert their own profile."
+  ON profiles FOR INSERT
+  WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile."
+  ON profiles FOR UPDATE
+  USING (auth.uid() = id);
 ```
 
-2. **Prisma**（ORM）を追加する場合：
+#### Supabase Auth設定
 
-```bash
-npm install prisma @prisma/client
-npx prisma init
-```
+1. Dashboard の "Authentication" → "Settings" を開く
+2. "Site URL" に開発環境のURL (`http://localhost:3000`) を設定
+3. "Redirect URLs" に本番環境のURL を追加
+4. 必要に応じてOAuth providersを設定（Google、GitHub等）
+
+#### 追加のデータベース機能
+
+- **Realtime**: テーブルの変更をリアルタイムで監視
+- **Storage**: ファイルアップロード機能
+- **Edge Functions**: サーバーレス関数
+- **Database Functions**: PostgreSQL関数
 
 ### 認証設定
 
