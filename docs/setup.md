@@ -10,6 +10,42 @@ NextJS App Skeletonプロジェクトのセットアップ手順を詳しく説�
 - **npm** 9.x以上（またはyarn, pnpm）
 - **Git** 2.x以上
 
+### Node.jsバージョン管理（推奨）
+
+プロジェクトでは `.tool-versions` ファイルを使用してNode.jsバージョンを管理しています。asdfを使用することを推奨します：
+
+#### asdfのインストール
+
+**macOS (Homebrew):**
+
+```bash
+brew install asdf
+```
+
+**Ubuntu/DebianもしくはWindows(WSL2):**
+
+```bash
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
+echo '. "$HOME/.asdf/asdf.sh"' >> ~/.bashrc
+echo '. "$HOME/.asdf/completions/asdf.bash"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+#### Node.js プラグインとバージョンのインストール
+
+```bash
+# Node.js プラグインを追加
+asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+
+# プロジェクト指定バージョンをインストール
+asdf install nodejs
+
+# バージョンを確認
+node --version
+```
+
+プロジェクトディレクトリに入ると、`.tool-versions` ファイルにより自動的に正しいNode.jsバージョンが適用されます。
+
 ## 初期セットアップ
 
 ### 1. プロジェクトのクローンまたは作成
@@ -253,6 +289,9 @@ REDIS_URL=redis://localhost:6379
 ```bash
 # Node.jsのバージョンを確認
 node --version
+
+# asdfを使用している場合（推奨）
+asdf install nodejs
 
 # nvmを使用している場合
 nvm use 18
