@@ -76,8 +76,14 @@ npm install -g @supabase/supabase-js supabase
 # Supabaseローカル環境の起動
 npx supabase start
 
-# データベースの初期化（マイグレーション + シード実行）
-npx supabase db reset
+# Prismaクライアントを生成
+npm run db:generate
+
+# データベースの初期化（スキーマ適用）
+npm run db:push
+
+# サンプルデータの投入
+npm run db:seed
 ```
 
 ### 4. 開発サーバーの起動
@@ -149,7 +155,7 @@ npm run dev
 
 ### 環境変数について
 
-`.env.local`ファイルには既にローカル開発用の設定が含まれています：
+`.env`ファイルには既にローカル開発用の設定が含まれています：
 
 ```bash
 # Supabase Local Development (事前設定済み)
@@ -180,7 +186,7 @@ ENABLE_LOGGING=true
 
 1. 作成したプロジェクトの Dashboard を開く
 2. 左サイドバーの "Settings" → "API" をクリック
-3. 以下の値をコピーして `.env.local` に設定：
+3. 以下の値をコピーして `.env` に設定：
    - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
    - **anon public** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - **service_role** → `SUPABASE_SERVICE_ROLE_KEY`
@@ -336,7 +342,7 @@ npm install next-auth
 必要に応じて以下のAPIキーを設定：
 
 ```bash
-# .env.localに追加
+# .envに追加
 OPENAI_API_KEY=your-openai-api-key
 STRIPE_SECRET_KEY=your-stripe-secret-key
 REDIS_URL=redis://localhost:6379

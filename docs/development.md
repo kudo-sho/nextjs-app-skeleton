@@ -13,10 +13,16 @@ npm install
 # 2. Supabaseローカル環境の起動
 npx supabase start
 
-# 3. データベースの初期化（マイグレーション + シード）
-npx supabase db reset
+# 3. Prismaクライアントを生成
+npm run db:generate
 
-# 4. 開発サーバーの起動
+# 4. データベースの初期化（スキーマ適用）
+npm run db:push
+
+# 5. サンプルデータの投入
+npm run db:seed
+
+# 6. 開発サーバーの起動
 npm run dev
 ```
 
@@ -24,7 +30,7 @@ npm run dev
 
 #### Supabase Local Development（デフォルト設定）
 
-環境変数は既に設定済み（`.env.local`）なので、追加の設定は不要です：
+環境変数は既に設定済み（`.env`）なので、追加の設定は不要です：
 
 ```bash
 # Supabaseローカル環境（事前設定済み）
@@ -83,7 +89,7 @@ docker-compose -f docker-compose.dev.yml up -d
 psql postgresql://postgres:password@localhost:5432/nextjs_app_skeleton
 ```
 
-**環境変数の設定（.env.local）:**
+**環境変数の設定（.env）:**
 
 ```bash
 # PostgreSQL直接接続

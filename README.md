@@ -18,6 +18,7 @@
 | -------------- | ---------------------------- |
 | フレームワーク | Next.js 15 (App Router)      |
 | データベース   | Supabase PostgreSQL          |
+| ORM            | Prisma                       |
 | 認証           | Supabase Auth                |
 | UI             | Tailwind CSS                 |
 | 状態管理       | Zustand                      |
@@ -40,10 +41,16 @@ npm install
 # 3. Supabaseローカル環境の起動
 npx supabase start
 
-# 4. データベースの初期化（テーブル作成 + サンプルデータ）
-npx supabase db reset
+# 4. Prismaクライアントの生成
+npm run db:generate
 
-# 5. 開発サーバーの起動
+# 5. データベースの初期化（テーブル作成 + マイグレーション）
+npm run db:push
+
+# 6. サンプルデータの投入
+npm run db:seed
+
+# 7. 開発サーバーの起動
 npm run dev
 ```
 
@@ -96,22 +103,29 @@ Docker が必要です：
 # Supabaseローカル環境の起動
 npx supabase start
 
-# データベースの初期化（マイグレーション + シード実行）
-npx supabase db reset
+# Prismaクライアント生成
+npm run db:generate
+
+# データベースの初期化（スキーマ適用）
+npm run db:push
+
+# サンプルデータの投入
+npm run db:seed
 ```
 
-環境変数は既に設定済み（`.env.local`）なので、そのまま開発を開始できます。
+環境変数は既に設定済み（`.env`）なので、そのまま開発を開始できます。
 
 **B. Supabaseクラウド（本番用）**
 
 1. [Supabase](https://supabase.com)でプロジェクトを作成
-2. `.env.local`ファイルを編集：
+2. `.env`ファイルを編集：
 
 ```bash
 # Supabaseクラウド設定に変更
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+DATABASE_URL=your-postgres-connection-string
 ```
 
 ### 5. 開発サーバーの起動
@@ -145,12 +159,17 @@ src/
 │   └── *.tsx             # ページ固有のコンポーネント
 ├── hooks/                # カスタムReactフック
 ├── lib/                  # ユーティリティ・設定
-│   ├── supabase.ts       # Supabaseクライアント
+│   ├── supabase.ts       # Supabaseクライアント（Auth・リアルタイム用）
+│   ├── prisma.ts         # Prismaクライアント（CRUD用）
 │   ├── env.ts            # 環境変数の型定義
 │   └── utils.ts          # 汎用ユーティリティ
 ├── store/                # Zustand状態管理
 ├── types/                # TypeScript型定義
 └── utils/                # API関連ユーティリティ
+prisma/
+├── schema.prisma         # データベーススキーマ定義
+├── migrations/           # マイグレーションファイル
+└── seed.ts              # シードデータ
 ```
 
 ## 🔧 開発コマンド
@@ -165,6 +184,13 @@ npm run build
 # 本番サーバー起動
 npm run start
 
+# データベース関連
+npm run db:generate    # Prismaクライアント生成
+npm run db:push        # スキーマをデータベースに適用
+npm run db:migrate     # マイグレーション作成・適用
+npm run db:seed        # サンプルデータ投入
+npm run db:studio      # Prisma Studio起動
+
 # テスト実行
 npm test
 npm run test:watch
@@ -176,26 +202,34 @@ npm run format:check
 npm run format
 ```
 
-## 🗄️ データベースセットアップ
+## 🗄️ データベース管理
+
+### スキーマ管理（Prisma）
+
+```bash
+# スキーマ変更後の手順
+1. prisma/schema.prisma を編集
+2. npm run db:push        # 開発環境へ適用
+3. npm run db:migrate     # 本番用マイグレーション作成
+```
 
 ### クラウド環境（本番用）
 
 1. [Supabase](https://supabase.com)でプロジェクトを作成
 2. データベースのURLとAPIキーを取得
-3. `.env.local`に設定を追加
+3. `.env`に設定を追加
+4. `npm run db:push` でスキーマを適用
 
 ### ローカル環境（開発用）
 
 ```bash
-# 依存関係のインストール
-npm install -g supabase
+# Supabaseローカル環境起動
+npx supabase start
 
-# 初期化と起動
-supabase init
-supabase start
-
-# テーブル作成（オプション）
-supabase db reset
+# Prismaセットアップ
+npm run db:generate    # クライアント生成
+npm run db:push        # スキーマ適用
+npm run db:seed        # データ投入
 ```
 
 詳細は [docs/setup.md](./docs/setup.md) を参照してください。
@@ -218,6 +252,7 @@ Vercelダッシュボードで以下の環境変数を設定：
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
 SUPABASE_SERVICE_ROLE_KEY
+DATABASE_URL
 NEXTAUTH_SECRET
 ```
 
