@@ -6,7 +6,7 @@ NextJS App Skeletonプロジェクトのセットアップ手順を詳しく説�
 
 以下のソフトウェアがインストールされている必要があります：
 
-- **Node.js** 18.x以上
+- **Node.js** 20.x以上
 - **npm** 9.x以上（またはyarn, pnpm）
 - **Git** 2.x以上
 - **Docker** （Supabaseローカル開発用）
@@ -155,18 +155,17 @@ npm run dev
 
 ### 環境変数について
 
+**重要**: Prismaが動作するためには`.env`ファイルが必要です。`.env.local`ではPrismaが環境変数を読み込めません。
+
 `.env`ファイルには既にローカル開発用の設定が含まれています：
 
 ```bash
 # Supabase Local Development (事前設定済み)
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 # その他の設定
 DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres
-NEXTAUTH_SECRET=development-secret-key-change-in-production
-NEXTAUTH_URL=http://localhost:3000
 NODE_ENV=development
 ENABLE_ANALYTICS=false
 ENABLE_LOGGING=true
@@ -188,8 +187,7 @@ ENABLE_LOGGING=true
 2. 左サイドバーの "Settings" → "API" をクリック
 3. 以下の値をコピーして `.env` に設定：
    - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
-   - **anon public** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - **service_role** → `SUPABASE_SERVICE_ROLE_KEY`
+   - **anon public** → `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY`
 
 ### 4. Gitフックの初期化
 
@@ -283,37 +281,10 @@ npm run start
 
 ### Supabase データベース設定
 
-#### 基本的なテーブル作成（例）
+#### データベーススキーマ管理
 
-Supabase Dashboard の SQL Editor で以下のような基本テーブルを作成できます：
-
-```sql
--- ユーザープロフィールテーブル
-CREATE TABLE profiles (
-  id UUID REFERENCES auth.users(id) PRIMARY KEY,
-  username TEXT UNIQUE,
-  full_name TEXT,
-  avatar_url TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Row Level Security (RLS) を有効化
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-
--- プロフィールのポリシー設定
-CREATE POLICY "Public profiles are viewable by everyone."
-  ON profiles FOR SELECT
-  USING (true);
-
-CREATE POLICY "Users can insert their own profile."
-  ON profiles FOR INSERT
-  WITH CHECK (auth.uid() = id);
-
-CREATE POLICY "Users can update own profile."
-  ON profiles FOR UPDATE
-  USING (auth.uid() = id);
-```
+このプロジェクトではPrismaを使用してデータベーススキーマを管理します。
+テーブル作成やスキーマ変更は `prisma/schema.prisma` ファイルで行い、マイグレーションで適用します。
 
 #### Supabase Auth設定
 
@@ -328,14 +299,6 @@ CREATE POLICY "Users can update own profile."
 - **Storage**: ファイルアップロード機能
 - **Edge Functions**: サーバーレス関数
 - **Database Functions**: PostgreSQL関数
-
-### 認証設定
-
-NextAuth.jsを使用する場合：
-
-```bash
-npm install next-auth
-```
 
 ### 外部サービス連携
 
@@ -362,7 +325,7 @@ node --version
 asdf install nodejs
 
 # nvmを使用している場合
-nvm use 18
+nvm use 20
 ```
 
 2. **依存関係の競合**
@@ -412,6 +375,7 @@ npm test -- --verbose
 セットアップが完了したら、以下のドキュメントを参照してください：
 
 - [開発ガイド](./development.md) - 開発の進め方
+- [デプロイメントガイド](./deployment.md) - CI/CDとVercelデプロイの詳細設定
 - [コンポーネントガイド](./components.md) - UIコンポーネントの使用方法
 - [API仕様](./api.md) - APIエンドポイントの詳細
 - [状態管理ガイド](./state-management.md) - Zustandストアの使い方

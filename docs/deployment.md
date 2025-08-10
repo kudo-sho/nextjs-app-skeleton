@@ -74,8 +74,7 @@ postgresql://postgres.PROJECT_ID:PASSWORD@aws-0-region.pooler.supabase.com:5432/
 # Supabase Dashboard > Settings > API
 
 NEXT_PUBLIC_SUPABASE_URL=https://PROJECT_ID.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-SUPABASE_SERVICE_ROLE_KEY=eyJ...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=eyJ...
 ```
 
 ## ⚙️ Vercel設定
@@ -99,16 +98,12 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...
 ```bash
 # Supabase（プレビューproject用）
 NEXT_PUBLIC_SUPABASE_URL=https://preview-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=preview-anon-key
-SUPABASE_SERVICE_ROLE_KEY=preview-service-role-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=preview-anon-key
 
 # データベース（Prisma用）
 DATABASE_URL=postgresql://postgres.preview-id:password@aws-0-region.pooler.supabase.com:6543/postgres?pgbouncer=true
 DIRECT_URL=postgresql://postgres.preview-id:password@aws-0-region.pooler.supabase.com:5432/postgres
 
-# 認証
-NEXTAUTH_SECRET=preview-secret-32-chars-minimum
-NEXTAUTH_URL=https://your-app-git-branch.vercel.app
 
 # Environment: Preview を選択
 ```
@@ -118,16 +113,12 @@ NEXTAUTH_URL=https://your-app-git-branch.vercel.app
 ```bash
 # Supabase（本番project用）
 NEXT_PUBLIC_SUPABASE_URL=https://production-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=production-anon-key
-SUPABASE_SERVICE_ROLE_KEY=production-service-role-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=production-anon-key
 
 # データベース（Prisma用）
 DATABASE_URL=postgresql://postgres.production-id:password@aws-0-region.pooler.supabase.com:6543/postgres?pgbouncer=true
 DIRECT_URL=postgresql://postgres.production-id:password@aws-0-region.pooler.supabase.com:5432/postgres
 
-# 認証
-NEXTAUTH_SECRET=production-secret-32-chars-minimum
-NEXTAUTH_URL=https://your-app.vercel.app
 
 # Environment: Production を選択
 ```
@@ -159,8 +150,8 @@ git push origin feature/new-feature
 
 ```bash
 # 1. 環境変数設定
-cp .env.example .env.local
-# .env.localに実際の値を設定
+cp .env.example .env
+# .envファイルに実際の値を設定
 
 # 2. ローカルSupabase起動
 npx supabase start

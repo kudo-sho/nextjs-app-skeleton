@@ -17,6 +17,7 @@ npx supabase start
 npm run db:generate
 
 # 4. データベースの初期化（スキーマ適用）
+# 開発環境では db:push を使用、本番では db:migrate を使用
 npm run db:push
 
 # 5. サンプルデータの投入
@@ -30,13 +31,12 @@ npm run dev
 
 #### Supabase Local Development（デフォルト設定）
 
-環境変数は既に設定済み（`.env`）なので、追加の設定は不要です：
+環境変数は既に設定済み（`.env`ファイル）なので、追加の設定は不要です：
 
 ```bash
 # Supabaseローカル環境（事前設定済み）
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 **利用可能なサービス:**
@@ -89,7 +89,7 @@ docker-compose -f docker-compose.dev.yml up -d
 psql postgresql://postgres:password@localhost:5432/nextjs_app_skeleton
 ```
 
-**環境変数の設定（.env）:**
+**環境変数の設定（.envファイル）:**
 
 ```bash
 # PostgreSQL直接接続
@@ -97,8 +97,6 @@ DATABASE_URL=postgresql://postgres:password@localhost:5432/nextjs_app_skeleton
 REDIS_URL=redis://localhost:6379
 
 # その他必須項目
-NEXTAUTH_SECRET=development-secret-key-32-chars-minimum
-NEXTAUTH_URL=http://localhost:3000
 NODE_ENV=development
 ```
 
@@ -107,67 +105,24 @@ NODE_ENV=development
 ```bash
 # 開発用Supabaseプロジェクトを使用
 NEXT_PUBLIC_SUPABASE_URL=https://your-dev-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-dev-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-dev-service-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-dev-anon-key
 ```
 
 ### 2. データベーススキーマの作成
 
-#### Supabaseの場合：
+#### データベーススキーマ管理：
+
+このプロジェクトではPrismaを使用してデータベーススキーマを管理します。
 
 ```bash
-# マイグレーションファイルを作成
-supabase migration new create_users_table
+# Prismaスキーマファイルを編集
+# prisma/schema.prisma
 
-# SQLファイルを編集（supabase/migrations/xxxx_create_users_table.sql）
-```
+# マイグレーションファイルを生成・適用
+npm run db:migrate
 
-```sql
--- ユーザーテーブル
-CREATE TABLE users (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  avatar_url TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Row Level Security (RLS) を有効化
-ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-
--- ポリシー設定
-CREATE POLICY "Users can view own data" ON users
-  FOR SELECT USING (auth.uid() = id);
-
--- トリガー関数（updated_at自動更新）
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ language 'plpgsql';
-
-CREATE TRIGGER update_users_updated_at
-  BEFORE UPDATE ON users
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-```
-
-```bash
-# マイグレーションを実行
-supabase db push
-```
-
-#### PostgreSQL直接の場合：
-
-```bash
-# データベースに接続
-psql $DATABASE_URL
-
-# または
-psql postgresql://postgres:password@localhost:5432/nextjs_app_skeleton
+# または開発環境では直接スキーマを適用
+npm run db:push
 ```
 
 ### 3. 開発環境の起動
@@ -201,17 +156,11 @@ docker-compose -f docker-compose.dev.yml down --volumes  # データも削除
 
 ### 5. 開発データの投入
 
-```sql
--- サンプルユーザーデータ
-INSERT INTO users (email, name) VALUES
-  ('admin@example.com', '管理者'),
-  ('user@example.com', 'テストユーザー');
-```
-
 ```bash
-# SQLファイルから実行
-psql $DATABASE_URL -f scripts/seed.sql
+# Prisma seedを実行
+npm run db:seed
 
+# データベースをリセットしてシードデータを投入
 # Supabaseの場合
 supabase db reset  # 全データリセット + マイグレーション + シード
 ```
@@ -691,7 +640,6 @@ npm audit
 ```bash
 # 本番環境用の環境変数
 NODE_ENV=production
-NEXTAUTH_SECRET=your-production-secret
 DATABASE_URL=your-production-database-url
 ```
 

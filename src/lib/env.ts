@@ -27,8 +27,9 @@ function getEnvVar(name: string, defaultValue?: string): string {
 export const env = {
   // Supabase設定（環境別にVercelで自動設定）
   NEXT_PUBLIC_SUPABASE_URL: getEnvVar('NEXT_PUBLIC_SUPABASE_URL'),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: getEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
-  SUPABASE_SERVICE_ROLE_KEY: getEnvVar('SUPABASE_SERVICE_ROLE_KEY'),
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY: getEnvVar(
+    'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY'
+  ),
 
   // データベース設定（Prisma用）
   DATABASE_URL: getEnvVar('DATABASE_URL'),
@@ -40,5 +41,4 @@ export const env = {
 
   // 実行環境
   NODE_ENV: getEnvVar('NODE_ENV', 'development'),
-  VERCEL_ENV: getEnvVar('VERCEL_ENV', 'development'),
 } as const;
