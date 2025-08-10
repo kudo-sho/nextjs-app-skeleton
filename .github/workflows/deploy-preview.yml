@@ -1,0 +1,54 @@
+name: Test and Build
+
+# PR作成時のテストとビルドチェック
+# デプロイはVercelの自動デプロイに任せる
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  # テストとビルド検証
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        
+      - name: Run linting
+        run: npm run lint
+        
+      - name: Run tests
+        run: npm run test
+        
+      - name: Build application
+        run: npm run build:dev
+        env:
+          # テスト用のダミー環境変数
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+          NEXT_PUBLIC_SUPABASE_URL: http://localhost:54321
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-key
+          NEXTAUTH_SECRET: test-secret-32-chars-minimum-length
+          NEXTAUTH_URL: http://localhost:3000
+          
+      - name: Test Summary
+        run: |
+          echo "✅ All tests passed!"
+          echo "✅ Linting successful!"
+          echo "✅ Build completed!"
+          echo ""
+          echo "🚀 Vercel will automatically deploy this PR"
+          echo "📊 Database migrations will run automatically during build"
