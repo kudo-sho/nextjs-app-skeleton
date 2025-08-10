@@ -9,12 +9,6 @@
       "maxDuration": 10
     }
   },
-  "crons": [
-    {
-      "path": "/api/health",
-      "schedule": "0 */6 * * *"
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
@@ -24,12 +18,6 @@
           "value": "s-maxage=60, stale-while-revalidate"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/health",
-      "destination": "/api/health"
     }
   ]
 }
