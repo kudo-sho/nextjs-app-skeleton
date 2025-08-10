@@ -7,7 +7,8 @@ const mockUsers: User[] = [
     id: '1',
     email: 'john@example.com',
     name: 'John Doe',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+    avatar:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
   },
@@ -15,7 +16,8 @@ const mockUsers: User[] = [
     id: '2',
     email: 'jane@example.com',
     name: 'Jane Smith',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
     createdAt: new Date('2024-01-02'),
     updatedAt: new Date('2024-01-02'),
   },
@@ -23,9 +25,10 @@ const mockUsers: User[] = [
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     const { id } = params;
     const user = mockUsers.find((u) => u.id === id);
 
@@ -55,9 +58,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     const { id } = params;
     const body = await request.json();
     const userIndex = mockUsers.findIndex((u) => u.id === id);
@@ -96,9 +100,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     const { id } = params;
     const userIndex = mockUsers.findIndex((u) => u.id === id);
 
