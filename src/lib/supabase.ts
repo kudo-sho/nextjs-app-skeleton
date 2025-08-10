@@ -18,8 +18,8 @@ export const supabase = createClient(
  * サーバーコンポーネント用Supabaseクライアント
  * Cookie-based認証に対応
  */
-export const createServerSupabaseClient = () => {
-  const cookieStore = cookies();
+export const createServerSupabaseClient = async () => {
+  const cookieStore = await cookies();
 
   return createServerClient(
     env.NEXT_PUBLIC_SUPABASE_URL,

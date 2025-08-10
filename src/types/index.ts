@@ -20,7 +20,7 @@ export interface User {
  * API レスポンスの標準形式
  * 全てのAPI呼び出しで一貫したレスポンス構造を提供します
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean; // 処理成功フラグ
   data?: T; // レスポンスデータ（成功時）
   error?: string; // エラーメッセージ（失敗時）

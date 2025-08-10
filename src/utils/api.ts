@@ -13,7 +13,7 @@ class ApiError extends Error {
   constructor(
     message: string,
     public status: number, // HTTPステータスコード
-    public response?: any // 生のレスポンスオブジェクト
+    public response?: Response // 生のレスポンスオブジェクト
   ) {
     super(message);
     this.name = 'ApiError';
@@ -31,7 +31,7 @@ interface RequestOptions extends RequestInit {
 /**
  * 汎用的なHTTPリクエスト関数
  * エラーハンドリング、タイムアウト、レスポンス変換を含む
- * 
+ *
  * @param url - リクエストURL
  * @param options - リクエストオプション
  * @returns API レスポンス
@@ -70,21 +70,21 @@ async function request<T>(
 
     const data = await response.json();
     return data;
-  } catch (error) {
+  } catch (error: unknown) {
     clearTimeout(timeoutId);
-    
+
     // 既存のApiErrorはそのまま再投げ
     if (error instanceof ApiError) {
       throw error;
     }
-    
+
     // タイムアウトエラーの処理
     if (error instanceof Error && error.name === 'AbortError') {
       throw new ApiError('Request timeout', 408);
     }
-    
+
     // その他のネットワークエラー
-    throw new ApiError('Network error', 0, error);
+    throw new ApiError('Network error', 0);
   }
 }
 
@@ -100,33 +100,33 @@ export const api = {
    */
   get: <T>(url: string, options?: RequestOptions) =>
     request<T>(url, { ...options, method: 'GET' }),
-    
+
   /**
    * POSTリクエストを送信
    * @param url - リクエストURL
    * @param body - リクエストボディ
    * @param options - リクエストオプション
    */
-  post: <T>(url: string, body?: any, options?: RequestOptions) =>
+  post: <T>(url: string, body?: unknown, options?: RequestOptions) =>
     request<T>(url, {
       ...options,
       method: 'POST',
       body: body ? JSON.stringify(body) : undefined,
     }),
-    
+
   /**
    * PUTリクエストを送信
    * @param url - リクエストURL
    * @param body - リクエストボディ
    * @param options - リクエストオプション
    */
-  put: <T>(url: string, body?: any, options?: RequestOptions) =>
+  put: <T>(url: string, body?: unknown, options?: RequestOptions) =>
     request<T>(url, {
       ...options,
       method: 'PUT',
       body: body ? JSON.stringify(body) : undefined,
     }),
-    
+
   /**
    * DELETEリクエストを送信
    * @param url - リクエストURL
