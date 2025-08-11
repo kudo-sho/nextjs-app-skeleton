@@ -74,7 +74,7 @@ postgresql://postgres.PROJECT_ID:PASSWORD@aws-0-region.pooler.supabase.com:5432/
 # Supabase Dashboard > Settings > API
 
 NEXT_PUBLIC_SUPABASE_URL=https://PROJECT_ID.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=eyJ...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 ```
 
 ## ⚙️ Vercel設定
@@ -98,7 +98,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=eyJ...
 ```bash
 # Supabase（プレビューproject用）
 NEXT_PUBLIC_SUPABASE_URL=https://preview-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=preview-anon-key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=preview-anon-key
 
 # データベース（Prisma用）
 DATABASE_URL=postgresql://postgres.preview-id:password@aws-0-region.pooler.supabase.com:6543/postgres?pgbouncer=true
@@ -113,7 +113,7 @@ DIRECT_URL=postgresql://postgres.preview-id:password@aws-0-region.pooler.supabas
 ```bash
 # Supabase（本番project用）
 NEXT_PUBLIC_SUPABASE_URL=https://production-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=production-anon-key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=production-anon-key
 
 # データベース（Prisma用）
 DATABASE_URL=postgresql://postgres.production-id:password@aws-0-region.pooler.supabase.com:6543/postgres?pgbouncer=true
