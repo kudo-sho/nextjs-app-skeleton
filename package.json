@@ -2,9 +2,14 @@
   "name": "nextjs-app-skeleton",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "prisma generate && prisma migrate deploy && next build",
+    "build:dev": "next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",

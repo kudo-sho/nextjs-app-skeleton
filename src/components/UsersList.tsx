@@ -7,6 +7,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { api } from '@/utils/api';
 import type { User, PaginatedResponse } from '@/types';
 import Button from './ui/Button';
@@ -101,9 +102,11 @@ export default function UsersList() {
             <div className="flex items-center space-x-3">
               {/* ユーザーアバター画像（存在する場合のみ表示） */}
               {user.avatar && (
-                <img
+                <Image
                   src={user.avatar}
                   alt={user.name}
+                  width={40}
+                  height={40}
                   className="w-10 h-10 rounded-full"
                 />
               )}

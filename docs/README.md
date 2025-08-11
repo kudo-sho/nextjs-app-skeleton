@@ -86,6 +86,7 @@ src/
 
 - [セットアップガイド](./setup.md) - プロジェクトの初期設定手順
 - [開発ガイド](./development.md) - 開発の進め方とベストプラクティス
+- [デプロイメントガイド](./deployment.md) - CI/CDとVercelデプロイの詳細設定
 - [API仕様](./api.md) - APIエンドポイントの詳細
 - [コンポーネントガイド](./components.md) - UIコンポーネントの使用方法
 - [状態管理ガイド](./state-management.md) - Zustandストアの使い方

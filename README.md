@@ -11,6 +11,7 @@
 - **Zustand** - 軽量な状態管理
 - **Jest** - テスト環境
 - **ESLint + Prettier + Husky** - コード品質管理
+- **GitHub Actions** - CI/CDパイプライン（テスト・ビルド検証）
 
 ## 🛠 技術スタック
 
@@ -23,6 +24,7 @@
 | UI             | Tailwind CSS                 |
 | 状態管理       | Zustand                      |
 | テスト         | Jest + React Testing Library |
+| CI/CD          | GitHub Actions               |
 | デプロイ       | Vercel                       |
 | 言語           | TypeScript                   |
 
@@ -84,8 +86,8 @@ asdf install nodejs
 
 **その他のバージョン管理ツール:**
 
-- nvm: `nvm use 18`
-- 直接インストール: Node.js 18.x以上
+- nvm: `nvm use 20`
+- 直接インストール: Node.js 20.x以上
 
 ### 3. 依存関係のインストール
 
@@ -113,7 +115,7 @@ npm run db:push
 npm run db:seed
 ```
 
-環境変数は既に設定済み（`.env`）なので、そのまま開発を開始できます。
+環境変数は既に設定済み（`.env`ファイル）なので、そのまま開発を開始できます。
 
 **B. Supabaseクラウド（本番用）**
 
@@ -123,8 +125,7 @@ npm run db:seed
 ```bash
 # Supabaseクラウド設定に変更
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-anon-key
 DATABASE_URL=your-postgres-connection-string
 ```
 
@@ -178,8 +179,11 @@ prisma/
 # 開発サーバー起動
 npm run dev
 
-# 本番ビルド
+# 本番ビルド（データベースマイグレーション含む）
 npm run build
+
+# 開発用ビルド（マイグレーション無し）
+npm run build:dev
 
 # 本番サーバー起動
 npm run start
@@ -234,13 +238,28 @@ npm run db:seed        # データ投入
 
 詳細は [docs/setup.md](./docs/setup.md) を参照してください。
 
+## 🔄 CI/CD
+
+### GitHub Actions
+
+Pull Request作成時に以下が自動実行されます：
+
+- 依存関係のインストール
+- Prismaクライアント生成
+- ESLintによるコードチェック
+- Jestによるテスト実行
+- Next.jsビルド検証
+
+ワークフローファイル: `.github/workflows/deploy-preview.yml`
+
 ## 🚢 Vercelデプロイ
 
 ### 自動デプロイ（推奨）
 
 1. GitHubリポジトリをVercelに接続
 2. 環境変数を設定
-3. 自動的にデプロイが開始されます
+3. Pull Requestごとにプレビュー環境が自動デプロイ
+4. mainブランチへのマージで本番環境が自動デプロイ
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
@@ -248,13 +267,25 @@ npm run db:seed        # データ投入
 
 Vercelダッシュボードで以下の環境変数を設定：
 
+**必須環境変数:**
+
 ```
-NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY
-DATABASE_URL
-NEXTAUTH_SECRET
+# Supabase設定
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-anon-key
+
+# データベース
+DATABASE_URL=your-postgres-connection-string
+DIRECT_URL=your-postgres-direct-connection-string
+
+# アプリケーション設定
+NODE_ENV=production
 ```
+
+**注意:**
+
+- `DIRECT_URL`はPrismaマイグレーションで使用
+- 本番環境では`DATABASE_URL`と`DIRECT_URL`を分けることを推奨
 
 ## 📚 ドキュメント
 
