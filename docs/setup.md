@@ -162,7 +162,7 @@ npm run dev
 ```bash
 # Supabase Local Development (事前設定済み)
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 # その他の設定
 DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres
@@ -187,7 +187,7 @@ ENABLE_LOGGING=true
 2. 左サイドバーの "Settings" → "API" をクリック
 3. 以下の値をコピーして `.env` に設定：
    - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
-   - **anon public** → `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY`
+   - **anon public** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 ### 4. Gitフックの初期化
 

@@ -36,7 +36,7 @@ npm run dev
 ```bash
 # Supabaseローカル環境（事前設定済み）
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 **利用可能なサービス:**
@@ -105,7 +105,7 @@ NODE_ENV=development
 ```bash
 # 開発用Supabaseプロジェクトを使用
 NEXT_PUBLIC_SUPABASE_URL=https://your-dev-project.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-dev-anon-key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-dev-anon-key
 ```
 
 ### 2. データベーススキーマの作成

@@ -40,7 +40,7 @@ jobs:
           # テスト用のダミー環境変数
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           NEXT_PUBLIC_SUPABASE_URL: http://localhost:54321
-          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY: dummy-key
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-key
           NEXTAUTH_SECRET: test-secret-32-chars-minimum-length
           NEXTAUTH_URL: http://localhost:3000
           
