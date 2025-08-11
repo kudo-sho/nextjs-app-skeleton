@@ -40,19 +40,22 @@ cd nextjs-app-skeleton
 # 2. 依存関係のインストール
 npm install
 
-# 3. Supabaseローカル環境の起動
+# 3. 環境変数ファイルのセットアップ
+cp .env.example .env
+
+# 4. Supabaseローカル環境の起動
 npx supabase start
 
-# 4. Prismaクライアントの生成
+# 5. Prismaクライアントの生成
 npm run db:generate
 
-# 5. データベースの初期化（テーブル作成 + マイグレーション）
+# 6. データベースの初期化（テーブル作成 + マイグレーション）
 npm run db:push
 
-# 6. サンプルデータの投入
+# 7. サンプルデータの投入
 npm run db:seed
 
-# 7. 開発サーバーの起動
+# 8. 開発サーバーの起動
 npm run dev
 ```
 
@@ -115,7 +118,7 @@ npm run db:push
 npm run db:seed
 ```
 
-環境変数は既に設定済み（`.env`ファイル）なので、そのまま開発を開始できます。
+環境変数は`.env.example`をコピーして作成した`.env`ファイルに設定済みなので、そのまま開発を開始できます。
 
 **B. Supabaseクラウド（本番用）**
 
@@ -125,7 +128,7 @@ npm run db:seed
 ```bash
 # Supabaseクラウド設定に変更
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-anon-key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 DATABASE_URL=your-postgres-connection-string
 ```
 
@@ -272,7 +275,7 @@ Vercelダッシュボードで以下の環境変数を設定：
 ```
 # Supabase設定
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-anon-key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
 # データベース
 DATABASE_URL=your-postgres-connection-string
