@@ -80,7 +80,7 @@ npx supabase start
 npm run db:generate
 
 # データベースの初期化（スキーマ適用）
-npm run db:push
+npm run db:migrate
 
 # サンプルデータの投入
 npm run db:seed

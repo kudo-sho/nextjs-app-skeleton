@@ -50,7 +50,7 @@ npx supabase start
 npm run db:generate
 
 # 6. データベースの初期化（テーブル作成 + マイグレーション）
-npm run db:push
+npm run db:migrate
 
 # 7. サンプルデータの投入
 npm run db:seed
@@ -111,8 +111,8 @@ npx supabase start
 # Prismaクライアント生成
 npm run db:generate
 
-# データベースの初期化（スキーマ適用）
-npm run db:push
+# データベースの初期化（マイグレーション適用）
+npm run db:migrate
 
 # サンプルデータの投入
 npm run db:seed
@@ -216,8 +216,7 @@ npm run format
 ```bash
 # スキーマ変更後の手順
 1. prisma/schema.prisma を編集
-2. npm run db:push        # 開発環境へ適用
-3. npm run db:migrate     # 本番用マイグレーション作成
+2. npm run db:migrate     # 本番用マイグレーション作成
 ```
 
 ### クラウド環境（本番用）
@@ -225,7 +224,7 @@ npm run format
 1. [Supabase](https://supabase.com)でプロジェクトを作成
 2. データベースのURLとAPIキーを取得
 3. `.env`に設定を追加
-4. `npm run db:push` でスキーマを適用
+4. `npm run db:migrate` でマイグレーションを適用
 
 ### ローカル環境（開発用）
 
@@ -235,7 +234,7 @@ npx supabase start
 
 # Prismaセットアップ
 npm run db:generate    # クライアント生成
-npm run db:push        # スキーマ適用
+npm run db:migrate     # マイグレーション適用
 npm run db:seed        # データ投入
 ```
 

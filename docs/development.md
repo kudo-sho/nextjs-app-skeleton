@@ -16,9 +16,8 @@ npx supabase start
 # 3. Prismaクライアントを生成
 npm run db:generate
 
-# 4. データベースの初期化（スキーマ適用）
-# 開発環境では db:push を使用、本番では db:migrate を使用
-npm run db:push
+# 4. データベースの初期化（マイグレーション適用）
+npm run db:migrate
 
 # 5. サンプルデータの投入
 npm run db:seed
@@ -120,9 +119,6 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-dev-anon-key
 
 # マイグレーションファイルを生成・適用
 npm run db:migrate
-
-# または開発環境では直接スキーマを適用
-npm run db:push
 ```
 
 ### 3. 開発環境の起動
