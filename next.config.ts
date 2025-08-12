@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
     // 外部画像を使用する場合のドメイン許可設定
     // セキュリティ対策として明示的に許可したドメインのみ使用可能
     remotePatterns: [
+      // Unsplashからの画像を許可
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
       // 例: 外部APIからの画像を使用する場合
       // {
       //   protocol: 'https',
