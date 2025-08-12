@@ -19,13 +19,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // 実験的機能の設定
-  experimental: {
-    // 型安全なルーティングを有効化
-    // LinkやrouterでのURL指定時にTypeScriptで型チェック
-    typedRoutes: true,
-  },
-
   // セキュリティヘッダーの設定
   async headers() {
     return [

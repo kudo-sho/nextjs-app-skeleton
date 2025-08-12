@@ -4,18 +4,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const environment = process.env.NODE_ENV || 'development';
-  const shouldSeed = process.env.SEED_DATABASE === 'true';
-
   console.log(`Environment: ${environment}`);
-  console.log(`SEED_DATABASE: ${process.env.SEED_DATABASE}`);
-
-  if (!shouldSeed) {
-    console.log(
-      'Skipping database seeding (SEED_DATABASE is not set to "true")'
-    );
-    return;
-  }
-
   console.log('Seeding database...');
 
   const userData = [
