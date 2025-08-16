@@ -1,27 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { User, ApiResponse } from '@/types';
-
-// Mock users data (in a real app, this would come from a database)
-const mockUsers: User[] = [
-  {
-    id: '1',
-    email: 'john@example.com',
-    name: 'John Doe',
-    avatar:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01'),
-  },
-  {
-    id: '2',
-    email: 'jane@example.com',
-    name: 'Jane Smith',
-    avatar:
-      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
-    createdAt: new Date('2024-01-02'),
-    updatedAt: new Date('2024-01-02'),
-  },
-];
+import { createServerSupabaseClient } from '@/lib/supabase';
 
 export async function GET(
   request: NextRequest,
@@ -30,9 +9,17 @@ export async function GET(
   try {
     const params = await context.params;
     const { id } = params;
-    const user = mockUsers.find((u) => u.id === id);
 
-    if (!user) {
+    const supabase = await createServerSupabaseClient();
+
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('id, email, name, avatar, created_at, updated_at')
+      .eq('id', id)
+      .single();
+
+    if (error || !user) {
+      console.error('Supabase error:', error);
       const response: ApiResponse = {
         success: false,
         error: 'User not found',
@@ -40,9 +27,18 @@ export async function GET(
       return NextResponse.json(response, { status: 404 });
     }
 
+    const transformedUser: User = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      avatar: user.avatar,
+      createdAt: new Date(user.created_at),
+      updatedAt: new Date(user.updated_at),
+    };
+
     const response: ApiResponse<User> = {
       success: true,
-      data: user,
+      data: transformedUser,
     };
 
     return NextResponse.json(response);
@@ -64,26 +60,59 @@ export async function PUT(
     const params = await context.params;
     const { id } = params;
     const body = await request.json();
-    const userIndex = mockUsers.findIndex((u) => u.id === id);
+    const { name, email, avatar } = body;
 
-    if (userIndex === -1) {
+    if (!name || !email) {
       const response: ApiResponse = {
         success: false,
-        error: 'User not found',
+        error: 'Name and email are required',
       };
-      return NextResponse.json(response, { status: 404 });
+      return NextResponse.json(response, { status: 400 });
     }
 
-    // Update user
-    mockUsers[userIndex] = {
-      ...mockUsers[userIndex],
-      ...body,
-      updatedAt: new Date(),
+    const supabase = await createServerSupabaseClient();
+
+    const { data: updatedUser, error } = await supabase
+      .from('users')
+      .update({
+        name,
+        email,
+        avatar,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select('id, email, name, avatar, created_at, updated_at')
+      .single();
+
+    if (error) {
+      console.error('Supabase error:', error);
+      const response: ApiResponse = {
+        success: false,
+        error:
+          error.code === '23505'
+            ? 'Email already exists'
+            : error.code === 'PGRST116'
+              ? 'User not found'
+              : 'Failed to update user',
+      };
+      return NextResponse.json(response, {
+        status:
+          error.code === '23505' ? 409 : error.code === 'PGRST116' ? 404 : 500,
+      });
+    }
+
+    const transformedUser: User = {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      avatar: updatedUser.avatar,
+      createdAt: new Date(updatedUser.created_at),
+      updatedAt: new Date(updatedUser.updated_at),
     };
 
     const response: ApiResponse<User> = {
       success: true,
-      data: mockUsers[userIndex],
+      data: transformedUser,
       message: 'User updated successfully',
     };
 
@@ -105,18 +134,24 @@ export async function DELETE(
   try {
     const params = await context.params;
     const { id } = params;
-    const userIndex = mockUsers.findIndex((u) => u.id === id);
 
-    if (userIndex === -1) {
+    const supabase = await createServerSupabaseClient();
+
+    const { error } = await supabase.from('users').delete().eq('id', id);
+
+    if (error) {
+      console.error('Supabase error:', error);
       const response: ApiResponse = {
         success: false,
-        error: 'User not found',
+        error:
+          error.code === 'PGRST116'
+            ? 'User not found'
+            : 'Failed to delete user',
       };
-      return NextResponse.json(response, { status: 404 });
+      return NextResponse.json(response, {
+        status: error.code === 'PGRST116' ? 404 : 500,
+      });
     }
-
-    // Remove user
-    mockUsers.splice(userIndex, 1);
 
     const response: ApiResponse = {
       success: true,

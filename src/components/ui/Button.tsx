@@ -11,14 +11,14 @@ import { cn } from '@/lib/utils';
  * 標準のボタン要素の属性に加えて、カスタムプロパティを提供します
  */
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost'; // ボタンの見た目のバリエーション
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive'; // ボタンの見た目のバリエーション
   size?: 'sm' | 'md' | 'lg'; // ボタンのサイズ
   loading?: boolean; // ローディング状態を表示するかどうか
 }
 
 /**
  * 汎用的なボタンコンポーネント
- * 
+ *
  * @param variant - ボタンのスタイルバリエーション（primary, secondary, outline, ghost）
  * @param size - ボタンのサイズ（sm, md, lg）
  * @param loading - ローディング状態の表示
@@ -26,32 +26,46 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
  * @param disabled - 無効状態
  * @param className - 追加のCSSクラス
  * @param ref - ボタン要素への参照
- * 
+ *
  * @example
  * <Button variant="primary" size="md" loading={isSubmitting} onClick={handleSubmit}>
  *   送信
  * </Button>
  */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', loading, children, disabled, ...props }, ref) => {
+  (
+    {
+      className,
+      variant = 'primary',
+      size = 'md',
+      loading,
+      children,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
     // ===== スタイル定義 =====
-    
+
     /**
      * 全てのボタンに共通の基本スタイル
      * アクセシビリティとインタラクションを考慮した設定
      */
-    const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
-    
+    const baseClasses =
+      'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
+
     /**
      * バリエーション別のスタイル定義
      */
     const variants = {
       primary: 'bg-primary text-primary-foreground hover:bg-primary/90', // メインアクション用
       secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80', // サブアクション用
-      outline: 'border border-input hover:bg-accent hover:text-accent-foreground', // 枠線スタイル
+      outline:
+        'border border-input hover:bg-accent hover:text-accent-foreground', // 枠線スタイル
       ghost: 'hover:bg-accent hover:text-accent-foreground', // 背景なしスタイル
+      destructive: 'bg-red-600 text-white hover:bg-red-700', // 削除など危険な操作用
     };
-    
+
     /**
      * サイズ別のスタイル定義
      */
@@ -63,12 +77,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <button
-        className={cn(
-          baseClasses,
-          variants[variant],
-          sizes[size],
-          className
-        )}
+        className={cn(baseClasses, variants[variant], sizes[size], className)}
         ref={ref}
         disabled={disabled || loading} // ローディング中も無効化
         {...props}

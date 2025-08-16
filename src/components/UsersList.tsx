@@ -11,6 +11,8 @@ import Image from 'next/image';
 import { api } from '@/utils/api';
 import type { User, PaginatedResponse } from '@/types';
 import Button from './ui/Button';
+import UserForm from './UserForm';
+import DeleteConfirmModal from './DeleteConfirmModal';
 
 /**
  * ユーザー一覧表示コンポーネント
@@ -28,6 +30,9 @@ export default function UsersList() {
   const [users, setUsers] = useState<User[]>([]); // ユーザーデータのリスト
   const [loading, setLoading] = useState(true); // ローディング状態
   const [error, setError] = useState<string | null>(null); // エラーメッセージ
+  const [showForm, setShowForm] = useState(false); // フォーム表示状態
+  const [editingUser, setEditingUser] = useState<User | null>(null); // 編集中のユーザー
+  const [deletingUser, setDeletingUser] = useState<User | null>(null); // 削除確認中のユーザー
 
   /**
    * ユーザーデータをAPIから取得する関数
@@ -61,6 +66,44 @@ export default function UsersList() {
     fetchUsers();
   }, []);
 
+  const handleCreateUser = () => {
+    setShowForm(true);
+    setEditingUser(null);
+  };
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setShowForm(true);
+  };
+
+  const handleDeleteUser = (user: User) => {
+    setDeletingUser(user);
+  };
+
+  const handleFormSubmit = (user: User) => {
+    if (editingUser) {
+      setUsers(users.map((u) => (u.id === user.id ? user : u)));
+    } else {
+      setUsers([user, ...users]);
+    }
+    setShowForm(false);
+    setEditingUser(null);
+  };
+
+  const handleFormCancel = () => {
+    setShowForm(false);
+    setEditingUser(null);
+  };
+
+  const handleDeleteConfirm = (userId: string) => {
+    setUsers(users.filter((u) => u.id !== userId));
+    setDeletingUser(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeletingUser(null);
+  };
+
   // ===== ローディング状態の表示 =====
   if (loading) {
     return (
@@ -84,12 +127,17 @@ export default function UsersList() {
   // ===== メインコンテンツの表示 =====
   return (
     <div className="space-y-4">
-      {/* ヘッダー部分（タイトルとリフレッシュボタン） */}
+      {/* ヘッダー部分（タイトルと操作ボタン） */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Users</h2>
-        <Button onClick={fetchUsers} size="sm">
-          Refresh
-        </Button>
+        <div className="flex space-x-2">
+          <Button onClick={handleCreateUser} size="sm">
+            Add User
+          </Button>
+          <Button onClick={fetchUsers} size="sm" variant="secondary">
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {/* ユーザーカードのグリッド表示 */}
@@ -112,16 +160,54 @@ export default function UsersList() {
               )}
 
               {/* ユーザー情報 */}
-              <div>
+              <div className="flex-1">
                 <h3 className="font-semibold">{user.name}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {user.email}
                 </p>
               </div>
             </div>
+
+            {/* 操作ボタン */}
+            <div className="flex space-x-2 mt-3">
+              <Button
+                onClick={() => handleEditUser(user)}
+                size="sm"
+                variant="secondary"
+                className="flex-1"
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={() => handleDeleteUser(user)}
+                size="sm"
+                variant="destructive"
+                className="flex-1"
+              >
+                Delete
+              </Button>
+            </div>
           </div>
         ))}
       </div>
+
+      {/* モーダル表示 */}
+      {showForm && (
+        <UserForm
+          user={editingUser || undefined}
+          onSubmit={handleFormSubmit}
+          onCancel={handleFormCancel}
+          isEditing={!!editingUser}
+        />
+      )}
+
+      {deletingUser && (
+        <DeleteConfirmModal
+          user={deletingUser}
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
+      )}
     </div>
   );
 }

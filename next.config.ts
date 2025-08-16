@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'example.com',
+        pathname: '/**',
+      },
       // 例: 外部APIからの画像を使用する場合
       // {
       //   protocol: 'https',
