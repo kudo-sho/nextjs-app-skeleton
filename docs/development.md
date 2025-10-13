@@ -22,9 +22,17 @@ npm run db:migrate
 # 5. サンプルデータの投入
 npm run db:seed
 
-# 6. 開発サーバーの起動
+# 6. VSCodeのデバッグパネルから「debug full stack」を起動（推奨）
+# または
 npm run dev
 ```
+
+**推奨**: 開発時は常に **VSCodeのデバッグ機能** で起動してください。
+
+- VSCodeの左サイドバー「実行とデバッグ」パネルを開く
+- 「**Next.js: debug full stack**」を選択して起動
+
+詳しくは [デバッグガイド](./DEBUG.md) を参照。
 
 ### データベース環境
 
@@ -130,12 +138,16 @@ supabase start                    # Supabaseローカル
 docker-compose -f docker-compose.dev.yml up -d  # Docker
 
 # Next.jsアプリケーション起動
+# 推奨：VSCodeデバッグパネルから「Next.js: debug full stack」を起動
+# または
 npm run dev
 
 # ブラウザで確認
 # アプリ: http://localhost:3000
 # Supabase Studio: http://localhost:54323 (Supabaseローカルの場合)
 ```
+
+**推奨**: VSCodeの **デバッグ機能** で起動すると、API・フロントエンド両方でブレークポイントが使えます。
 
 ### 4. 開発環境の停止
 
@@ -169,13 +181,15 @@ supabase db reset  # 全データリセット + マイグレーション + シ�
 # 1. 新しいブランチを作成
 git checkout -b feature/new-feature
 
-# 2. 開発サーバーを起動
+# 2. VSCodeデバッグパネルから「debug full stack」を起動（推奨）
+# または
 npm run dev
 
 # 3. 開発作業
 # - コンポーネント作成
 # - API実装
 # - テスト作成
+# - ブレークポイントでデバッグ
 
 # 4. コードの確認
 npm run lint        # ESLintチェック
@@ -189,6 +203,8 @@ git commit -m "feat: 新機能の追加"
 # 6. プッシュとプルリクエスト
 git push origin feature/new-feature
 ```
+
+**Tips**: 開発中は常にデバッグモードで起動することで、問題が発生した時にすぐにブレークポイントを設定して調査できます。
 
 ### 2. コード品質の維持
 
@@ -573,7 +589,24 @@ import Image from 'next/image';
 
 ## デバッグとトラブルシューティング
 
-### 1. 開発ツール
+### デバッグ方法
+
+このプロジェクトでは **VSCodeのデバッグ機能** を使った開発を推奨しています。
+
+**基本的な使い方:**
+
+1. デバッグしたいファイルを開く
+2. 停止させたい行番号の左側をクリック（ブレークポイント設定）
+3. VSCodeの左サイドバー「実行とデバッグ」パネルを開く
+4. 「**Next.js: debug full stack**」を選択して起動（または `F5` キー）
+5. APIやアプリを操作
+6. ブレークポイントで停止して、変数やコールスタックを確認
+
+> **注意**: `F5` キーは「最後に実行したデバッグ構成」を実行します。初回起動時は必ず「**Next.js: debug full stack**」を選択してください。
+
+**詳しくは [デバッグガイド](./DEBUG.md) を参照してください。**
+
+### 開発ツール
 
 **React Developer Tools:**
 
@@ -597,7 +630,7 @@ export const useStore = create<State & Actions>()(
 );
 ```
 
-### 2. ログ出力
+### ログ出力
 
 ```typescript
 // 開発環境でのログ出力
@@ -613,6 +646,8 @@ if (env.ENABLE_LOGGING) {
   logger.info('User action', { userId, action });
 }
 ```
+
+**Tips**: サーバーサイドの `console.log` はVSCodeのターミナルに、クライアントサイドの `console.log` はブラウザのDevToolsに出力されます。
 
 ## デプロイメント
 

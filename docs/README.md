@@ -86,6 +86,7 @@ src/
 
 - [セットアップガイド](./setup.md) - プロジェクトの初期設定手順
 - [開発ガイド](./development.md) - 開発の進め方とベストプラクティス
+- [**デバッグガイド**](./DEBUG.md) - デバッグ方法と開発開始手順 ⭐
 - [デプロイメントガイド](./deployment.md) - CI/CDとVercelデプロイの詳細設定
 - [API仕様](./api.md) - APIエンドポイントの詳細
 - [コンポーネントガイド](./components.md) - UIコンポーネントの使用方法
@@ -93,13 +94,34 @@ src/
 
 ## クイックスタート
 
+### 開発を始める（推奨）
+
 ```bash
-# 依存関係のインストール
+# 1. 依存関係のインストール
 npm install
 
-# 開発サーバーの起動
-npm run dev
+# 2. Supabaseローカル環境の起動
+npx supabase start
 
+# 3. データベースの初期化
+npm run db:migrate
+npm run db:seed
+
+# 4. VSCodeのデバッグパネルから「debug full stack」を起動
+# または
+npm run dev  # デバッグなしで起動
+```
+
+**推奨**: 開発時は常に **VSCodeのデバッグ機能** で起動することをお勧めします。
+
+- VSCodeの左サイドバー「実行とデバッグ」パネルを開く
+- 「**Next.js: debug full stack**」を選択して起動
+
+詳しくは [デバッグガイド](./DEBUG.md) を参照してください。
+
+### その他のコマンド
+
+```bash
 # テストの実行
 npm test
 

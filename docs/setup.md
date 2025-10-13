@@ -89,12 +89,21 @@ npm run db:seed
 ### 4. 開発サーバーの起動
 
 ```bash
+# 推奨：VSCodeのデバッグパネルから「debug full stack」を起動
+# または
 npm run dev
 ```
 
 ブラウザで `http://localhost:3000` にアクセス！
 
 **🎉 これだけで開発環境の準備が完了です！**
+
+**推奨**: 開発時は常に **VSCodeのデバッグ機能** で起動してください。
+
+- VSCodeの左サイドバー「実行とデバッグ」パネルを開く
+- 「**Next.js: debug full stack**」を選択して起動
+
+詳しくは [デバッグガイド](./DEBUG.md) を参照。
 
 ---
 
@@ -206,10 +215,14 @@ npm run prepare
 ### 1. 開発サーバーの起動
 
 ```bash
+# 推奨：VSCodeデバッグパネルから「Next.js: debug full stack」を起動
+# または
 npm run dev
 ```
 
 ブラウザで `http://localhost:3000` にアクセスして、アプリケーションが正常に表示されることを確認します。
+
+**推奨**: VSCodeの **デバッグ機能** で起動すると、API・フロントエンド両方でブレークポイントが使えます。
 
 ### 2. テストの実行
 
@@ -357,14 +370,20 @@ npm run dev
 
 開発時のデバッグには以下を活用：
 
-1. **ブラウザの開発者ツール**
-2. **Next.jsの詳細ログ**
+1. **VSCode デバッガー（推奨）**
+   - デバッグパネルから「Next.js: debug full stack」を起動
+   - ブレークポイントで停止して変数確認
+   - 詳しくは [デバッグガイド](./DEBUG.md)
+
+2. **ブラウザの開発者ツール**
+
+3. **Next.jsの詳細ログ**
 
 ```bash
 DEBUG=* npm run dev
 ```
 
-3. **テストのデバッグ**
+4. **テストのデバッグ**
 
 ```bash
 npm test -- --verbose
@@ -374,6 +393,7 @@ npm test -- --verbose
 
 セットアップが完了したら、以下のドキュメントを参照してください：
 
+- [**デバッグガイド**](./DEBUG.md) - デバッグ方法と開発開始手順 ⭐
 - [開発ガイド](./development.md) - 開発の進め方
 - [デプロイメントガイド](./deployment.md) - CI/CDとVercelデプロイの詳細設定
 - [コンポーネントガイド](./components.md) - UIコンポーネントの使用方法
