@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "prisma generate && next dev --turbopack",
+    "dev:debug": "prisma generate && NODE_OPTIONS='--inspect=9230' next dev --turbopack",
     "build": "prisma generate && bash scripts/deploy-migrations.sh && next build",
     "build:dev": "next build",
     "start": "next start",
