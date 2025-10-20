@@ -313,3 +313,5 @@ MIT License - 詳細は [LICENSE](LICENSE) ファイルを参照してくださ�
 ## 🆘 サポート
 
 問題や質問がある場合は、[Issues](https://github.com/kudo-sho/nextjs-app-skeleton/issues)を作成してください。
+
+test
