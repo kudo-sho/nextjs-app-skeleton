@@ -44,7 +44,7 @@
     "prisma": "^6.13.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "supabase": "^2.33.9"
+    "supabase": "^2.47.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
